@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curise Booking</title>
     <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -31,7 +31,8 @@
 
         <div class="booking-content">
             <h1>Cruise Queen</h1>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book./p>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+                book.</p>
         </div>
 
 
@@ -39,74 +40,152 @@
             <h3>Book Ocean Time</h3>
             <div class="input-group">
                 <label for="">Flying From</label>
-                <input class="inp-style" type="text" name="" placeholder="Dhake, Bangladesh">
+                <input class="inp-style" type="text" id="flying_from" name="" placeholder="Dhake, Bangladesh">
             </div>
             <div class="input-group">
                 <label for="">Flying To</label>
-                <input class="inp-style" type="text" name="" placeholder="New York, United States">
+                <input class="inp-style" type="text" id="flying_to" name="" placeholder="New York, United States">
             </div>
             <div class="inputs">
                 <div class="input-group">
-                    <label" for="">Departure</label>
-                    <input class="inp-style" type="date" name="">
+                    <label " for=" ">Departure</label>
+                    <input class="inp-style " type="date" id="departure_date" name=" ">
                 </div>
-                <div class="input-group">
-                    <label for="">Return</label>
-                    <input class="inp-style" type="date" name="">
+                <div class="input-group ">
+                    <label for=" ">Return</label>
+                    <input class="inp-style " type="date" id="return_date" name=" ">
                 </div>
             </div>
-            <div class="input-group f-class">
+            <div class="input-group f-class ">
                 <div>
-                    <label for="">First Class ($150)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <label for=" ">First Class ($150)</label>
+                    <input id="first_class_count" class="inp-style inp-width "  type="number" value="0" >
                 </div>
-                <div class="plus-minus-btn">
-                    <p>+ -</p>
+                <div class="plus-minus-btn ">
+                    <button  onclick="handleTicketClassChange( 'first_class',true) " class="btn btn-default "><i class="fas fa-plus "></i></button>
+                    <button onclick="handleTicketClassChange( 'first_class',false) "class="btn btn-default "><i class="fas fa-minus "></i></button>
                 </div>
             </div>
             
-            <div class="input-group f-class">
+            <div class="input-group f-class ">
                 <div>
-                    <label for="">Economy ($100)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <label for=" ">Economy ($100)</label>
+                    <input id="economy_class_count"class="inp-style inp-width " type="number" name=" " value="0">
                 </div>
-                <div class="plus-minus-btn">
-                    <p> <span>+</span> <span>-</span> </p>
+                <div class="plus-minus-btn ">
+                    <button onclick="handleTicketClassChange( 'economy_class',true) " class="btn btn-default "><i class="fas fa-plus "></i></button>
+                    <button onclick="handleTicketClassChange( 'economy_class',false) " class="btn btn-default "><i class="fas fa-minus "></i></button>
+                    
                 </div>
             </div>
-            <div class="calculations">
-                <div class="amount">
-                    <div class="left">
+            <div class="calculations ">
+                <div class="amount ">
+                    <div class="left ">
                         <p>Subtotal</p>
                     </div>
-                    <div class="right">
-                        <p>$500</p>
+                    <div class="right ">
+                        <p id="total_price">$0</p>
                     </div>
                 </div>
 
-                <div class="amount">
-                    <div class="left">
+                <div class="amount ">
+                    <div class="left ">
                         <p>Charge 10% VAT</p>
                     </div>
-                    <div class="right">
-                        <p>$50</p>
+                    <div class="right ">
+                        <p id="tax_amount">$0</p>
                     </div>
                 </div>
                 <hr>
-                <div class="amount">
-                    <div class="left">
+                <div class="amount ">
+                    <div class="left ">
                         <h4>Total</h4>
                     </div>
-                    <div class="right">
-                        <p>$550</p>
+                    <div class="right ">
+                        <p id="grand_total">$0</p>
                     </div>
                 </div>
             </div>
-            <button class="btn-style">Book Now</button>
+            <button class="btn-style" onclick="handleBookClick()">Book Now</button>
+            
+            <div id="summary"></div>
+            
         </div>
     </main>
+    <script type="text/javascript ">
+        function handleTicketClassChange(ticket, isIncrease) {
 
-    <!--Thank You-->
+            const ticketCount = getInputValue(ticket);
+            let ticketNewCount = ticketCount;
+            if (isIncrease == true) {
+                ticketNewCount = ticketCount + 1;
+            }
+            if (isIncrease == false && ticketCount > 0) {
+                ticketNewCount = ticketCount - 1;
+            }
+            document.getElementById(ticket + '_count').value = ticketNewCount;
+            let ticketTotal = 0;
+            if (ticket == 'first_class') {
+                ticketTotal = ticketNewCount * 150;
+            }
+            if (ticket == 'economy_class') {
+                ticketTotal = ticketNewCount * 100;
+            }
+
+            calculateTotal();
+        }
+
+        
+        function calculateTotal() {
+            const firstClassCount = getInputValue('first_class');
+            const economyClassCount = getInputValue('economy_class');
+
+            const totalPrice = firstClassCount * 150 + economyClassCount * 100;
+            document.getElementById('total_price').innerText = '$' + totalPrice;
+
+            const tax = Math.round(totalPrice * 0.1);
+            document.getElementById('tax_amount').innerText = '$' + tax;
+
+            const grandTotal = totalPrice + tax;
+            document.getElementById('grand_total').innerText = '$' + grandTotal;
+        }
+
+        function getInputValue(ticket) {
+            console.log(ticket);
+            const ticketInput = document.getElementById(ticket + '_count');
+            const ticketCount = parseInt(ticketInput.value);
+            return ticketCount;
+        }
+
+        function handleBookClick() {
+            const flyingFrom = document.getElementById("flying_from").value;
+            const flyingTo = document.getElementById("flying_to").value;
+            const departureDate = document.getElementById("departure_date").value;
+            const returnDate = document.getElementById("return_date").value;
+
+            const firstClassCount = getInputValue('first_class');
+            const economyClassCount = getInputValue('economy_class');
+
+            const totalPrice = firstClassCount * 150 + economyClassCount * 100;
+            const tax = Math.round(totalPrice * 0.1);
+            const grandTotal = totalPrice + tax;
+            
+            let summary = "<h2>Summary</h2>";
+            summary += "<p>Flying From: "+flyingFrom+"</p>";
+            summary += "<p>Flying To: "+flyingTo+"</p>";
+            summary += "<p>Departure: "+departureDate+"</p>";
+            summary += "<p>Return: "+returnDate+"</p>";
+            summary += "<p>First Class Ticket(s) = "+firstClassCount+"</p>";
+            summary += "<p>Economy Class Ticket(s) = "+economyClassCount+"</p>";
+            summary += "<p>Sub Total = $"+totalPrice+"</p>";
+            summary += "<p>Tax = $"+tax+"</p>";
+            summary += "<p>Grand Total = $"+grandTotal+"</p>";
+            document.getElementById("summary").innerHTML = summary; 
+        }
+        
+    </script>
+
+    
 </body>
 
 </html>
